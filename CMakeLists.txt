@@ -33,12 +33,16 @@ find_package(Boost CONFIG REQUIRED)
 add_library(
   ${PROJECT_NAME}
   STATIC
-  ${CMAKE_CURRENT_SOURCE_DIR}/sources/main.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/sources/Json.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/sources/JsonParser.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/sources/Utils.cpp
 )
 
 add_executable(
   tests
-  ${CMAKE_CURRENT_SOURCE_DIR}/sources/main.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/tests/TestJson.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/tests/TestJsonObject.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/tests/TestJsonArray.cpp
 )
 target_include_directories(
   ${PROJECT_NAME}
@@ -73,6 +77,37 @@ target_link_libraries(
 
 enable_testing()
 add_test(NAME unit_tests COMMAND tests)
+
+if (BUILD_DEMO)
+  set(DEMO_NAME ${PROJECT_NAME}Demo)
+  add_executable(
+    ${DEMO_NAME}
+    ${CMAKE_CURRENT_SOURCE_DIR}/demo/main.cpp
+  )
+
+  target_include_directories(
+    ${DEMO_NAME}
+    PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include
+  )
+  target_link_libraries(${DEMO_NAME} ${PROJECT_NAME})
+endif ()
+
+if (BUILD_BROKER)
+  hunter_add_package(nlohmann_json)
+  find_package(nlohmann_json CONFIG REQUIRED)
+
+  set(BROKER_NAME ${PROJECT_NAME}Broker)
+  add_executable(
+    ${BROKER_NAME}
+    ${CMAKE_CURRENT_SOURCE_DIR}/broker/main.cpp
+  )
+
+  target_include_directories(
+    ${BROKER_NAME}
+    PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include
+  )
+  target_link_libraries(${BROKER_NAME} ${PROJECT_NAME} nlohmann_json::nlohmann_json)
+endif ()
 
 if (BUILD_COVERAGE)
   set(ENABLE_COVERAGE ON CACHE BOOL "Enable coverage build." FORCE)
