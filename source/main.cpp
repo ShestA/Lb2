@@ -1,3 +1,4 @@
+//Copyright 2019 <s9>
 #include <iostream>
 #include <random>
 #include <vector>
@@ -12,17 +13,17 @@ static unsigned int seed;
 
 int Levels(int x, int n){
     int size = 0;
-        size = ceil(pow(2,(x+n)) * KB / 4);
+        size = ceil(pow(2, (x+n)) * KB / 4);
     return size;
 }
 
  std::vector<int> CreatingBuffer(int size){
     srand(time(nullptr));
 
-    int a=2;
+    int a = 2;
     std::vector<int>buffer(size);
 
-    if(a == 1){
+    if (a == 1){
 //Написать для файла
     }
     else if(a == 2){
